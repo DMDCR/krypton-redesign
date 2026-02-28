@@ -5,7 +5,7 @@ let aGames=[];
 
 const COVER_URL = "https://cdn.jsdelivr.net/gh/gn-math/covers@main";
 const HTML_URL = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
-const CKV_URL = "https://cdn.jsdelivr.net/gh/carbonicality/ChickenKingsVault@main";
+const CKV_URL = "https://cdn.jsdelivr.net/gh/WanoCapy/ChickenKingsVault@main";
 
 let currProvider = localStorage.getItem('krypton_provider') || 'ckv';
 
@@ -132,16 +132,33 @@ function initProvSel() {
 
 async function fetchCKVGames() {
     try {
-        const res = await fetch(`${CKV_URL}/games.json?t=${Date.now()}`);
+        const apiUrl = `https://api.github.com/repos/WanoCapy/ChickenKingsVault/contents/`;
+        const res = await fetch(apiUrl);
         const json = await res.json();
-        games = json.map(g => ({
-            name:g.name,
-            icon:`${CKV_URL}/${g.img}`,
-            url:`${CKV_URL}/${g.html}`
-        }));
+        const imageExts = ['png','jpg','jpeg','webp'];
+        const imageMap = {};
+        json.filter(f => f.type==='file'&&imageExts.some(ext => f.name.toLowerCase().endsWith('.'+ext)))
+            .forEach(f => {
+                const key=f.name.toLowerCase().replace(/\.(png|jpg|jpeg|webp)$/, '');
+                imageMap[key]=f.name;
+            });
+        let htmlFiles = json.filter(f => f.type === 'file' && f.name.endsWith('.html') && f.name!=='index.html');
+        const prettyFiles = htmlFiles.filter(f => /[A-Z\s]/.test(f.name));
+        if (prettyFiles.length>0) htmlFiles = prettyFiles;
+        games = htmlFiles.map(f => {
+            const baseName = f.name.replace('.html','');
+            const normKey = baseName.toLowerCase().replace(/[\s.]/g,'');
+            const imageFile = imageMap[normKey]||imageMap[baseName.toLowerCase()]||null;
+            const icon = imageFile ? `${CKV_URL}/${imageFile}` : `${CKV_URL}/${baseName}.png`;
+            return {
+                name: baseName,
+                icon:icon,
+                url:`${CKV_URL}/${f.name}`
+            };
+        });
         localStorage.setItem('krypton_games_list_ckv',JSON.stringify(games));
-        aGames=[...games];
-        fGames=[...games];
+        aGames = [...games];
+        fGames = [...games];
         renderGames();
     } catch (error) {
         console.error('failed to load CKV games:',error);
