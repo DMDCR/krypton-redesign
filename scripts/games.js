@@ -133,19 +133,38 @@ function initProvSel() {
 
 async function fetchCKVGames() {
     try {
-        const iconRes = await fetch(`${CKV_ICONS_URL}/games.json?t=${Date.now()}`);
-        const iconJson = await iconRes.json();
-        games = iconJson.map(g => ({
-            name: g.name,
-            icon: `${CKV_ICONS_URL}/${g.img}`,
-            url: `${CKV_URL}/${g.html}`
-        }));
-        localStorage.setItem('krypton_games_list_ckv', JSON.stringify(games));
+        const iconMap = {};
+        try {
+            const iconRes = await fetch(`${CKV_ICONS_URL}/games.json?t=${Date.now()}`);
+            const iconJson = await iconRes.json();
+            iconJson.forEach(g => {
+                const key = g.html.toLowerCase().replace(/\s+/g, '');
+                iconMap[key] = `${CKV_ICONS_URL}/${g.img}`;
+            });
+        } catch (e) {
+            console.log('couldnt load icon map');
+        }
+        const apiUrl = `https://api.github.com/repos/WanoCapy/ChickenKingsVault/contents/`;
+        const res = await fetch(apiUrl);
+        const json = await res.json();
+        let htmlFiles = json.filter(f => f.type==='file'&&f.name.endsWith('.html') && f.name !=='index.html');
+        const prettyFiles = htmlFiles.filter(f => /[A-Z\s]/.test(f.name));
+        if (prettyFiles.length > 0) htmlFiles = prettyFiles;
+        games = htmlFiles.map(f => {
+            const normKey = f.name.toLowerCase().replace(/\s+/g, '');
+            const icon = iconMap[normKey]||`${CKV_URL}/${f.name.replace('.html','.png')}`;
+            return {
+                name:f.name.replace('.html',''),
+                icon:icon,
+                url:`${CKV_URL}/${f.name}`
+            };
+        });
+        localStorage.setItem('krypton_games_list_ckv',JSON.stringify(games));
         aGames = [...games];
         fGames = [...games];
         renderGames();
     } catch (error) {
-        console.error('failed to load CKV games:', error);
+        console.error('failed to load CKV games:',error);
         const cachedGames = localStorage.getItem('krypton_games_list_ckv');
         if (cachedGames) {
             games = JSON.parse(cachedGames);
