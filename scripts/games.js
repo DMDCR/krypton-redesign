@@ -187,6 +187,11 @@ async function checkGames() {
     }
 }
 
+function genFallback(name) {
+    const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<div style="width:100%;height:100%;background:linear-gradient(180deg,#60a5fa,#93c5fd);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:white;text-shadow:0 2px 8px rgba(0,0,0,0.6);border-radius:inherit;letter-spacing:1px;">${initials}</div>`;
+}
+
 function createGC(game) {
     const card = document.createElement('div');
     card.className = 'gcard';
@@ -198,9 +203,15 @@ function createGC(game) {
         <img src="${game.icon}" alt="${game.name}" loading="lazy">
     </div>
     <div class="game-nm">${game.name}</div>`;
-    card.addEventListener('click',()=>{
-        openGame(game);
-    });
+    const img = card.querySelector('img');
+    if (!game.icon) {
+        img.parentElement.innerHTML = genFallback(game.name);
+    } else {
+        img.addEventListener('error',()=>{
+            img.parentElement.innerHTML = genFallback(game.name);
+        });
+    }
+    card.addEventListener('click',()=>openGame(game));
     return card;
 }
 
