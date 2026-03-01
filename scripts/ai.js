@@ -1,5 +1,107 @@
 lucide.createIcons();
 
+const messagesEl = document.getElementById('aiMsgs');
+const inputEl = document.getElementById('aiInput');
+const sendBtn = document.getElementById('aiSend');
+
+let convoHistory = [];
+let cApiKey = null;
+
+async function getApiKey() {
+    if (cApiKey) return cApiKey;
+    const res = await fetch('https://api.carbon06.qzz.io/api-key.txt');
+    cApiKey = (await res.text()).trim();
+    return cApiKey;
+}
+
+function appendMsg(role,text) {
+    const welcome = messagesEl.querySelector('.ai-welcome');
+    if (welcome) welcome.remove();
+    const msg = document.createElement('div');
+    msg.className = `msg ${role}`;
+    msg.innerHTML = `
+    <div class="msg-label">${role === 'user' ? 'you' : 'krypton ai'}</div>
+    <div class="msg-bubble"></div>`;
+    messagesEl.appendChild(msg);
+    const bubble = msg.querySelector('.msg-bubble');
+    bubble.textContent = text;
+    messagesEl.scrollTop=messagesEl.scrollHeight;
+    return msg.querySelector('.msg-bubble');
+}
+
+function showTyping() {
+    const wrapper = document.createElement('div');
+    wrapper.className='msg ai';
+    wrapper.id='typingInd';
+    wrapper.innerHTML = `
+    <div class="msg-label">krypton ai</div>
+    <div class="typing-ind">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+    </div>`;
+    messagesEl.appendChild(wrapper);
+    messagesEl.scrollTop=messagesEl.scrollHeight;
+}
+
+function removeTyping() {
+    const t = document.getElementById('typingInd');
+    if (t) t.remove();
+}
+
+inputEl.addEventListener('input',()=>{
+    inputEl.style.height='auto';
+    inputEl.style.height=Math.min(inputEl.scrollHeight,120)+'px';
+});
+
+inputEl.addEventListener('keydown',(e)=>{
+    if (e.key==='Enter'&&!e.shiftKey) {
+        e.preventDefault();
+        sendMsg();
+    }
+});
+
+sendBtn.addEventListener('click',sendMsg);
+
+async function sendMsg() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    inputEl.value='';
+    inputEl.style.height='auto';
+    sendBtn.disabled=true;
+    appendMsg('user',text);
+    convoHistory.push({role:'user',content:text});
+    showTyping();
+    try {
+        const res = await fetch('https://krypton-proxy.carbonical80.workers.dev',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+            },
+            body: JSON.stringify({
+                model:'google/gemini-3-flash-preview',
+                messages: [
+                    {role:'system',content:'you are krypton ai, an assistant for the krypton site.'},
+                    ...convoHistory
+                ]
+            })
+        });
+        const data = await res.json();
+        removeTyping();
+        const reply = data.choices?.[0]?.message?.content||'something went wrong.';
+        convoHistory.push({role:'assistant',content:reply});
+        const bubble = appendMsg('ai',reply);
+        bubble.textContent=reply;
+    } catch (err) {
+        removeTyping();
+        const bubble = appendMsg('ai','');
+        bubble.textContent = 'failed to connect. check your network.';
+        console.error(err);
+    }
+    sendBtn.disabled=false;
+    inputEl.focus();
+}
+
 function partCount() {
     const preset = localStorage.getItem('krypton_particlePreset') || 'maximum';
     return {off:0,minimal:40,medium:60,maximum:120}[preset]??120;
