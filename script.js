@@ -1330,8 +1330,8 @@ document.querySelectorAll('.shortcut').forEach(shortcut => {
             loadWebsiteInternal('./apps.html','Apps');
         } else if (title === 'settings') {
             loadWebsiteInternal('./settings.html','Settings');
-        } else if (title === 'movies') {
-            loadWebsite('https://filmex.to');
+        } else if (title === 'movies') { 
+            loadWebsite('https://xprime.today/'); 
         }
     });
 });
