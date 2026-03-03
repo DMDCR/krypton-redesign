@@ -74,7 +74,7 @@ function ensureScramInit() {
         if (!initFrame){
             initFrame=document.createElement('iframe');
             initFrame.id='scramjet-init';
-            initFrame.src='https://api.carbon06.qzz.io/';
+            initFrame.src='https://api.classroom.lat/';
             initFrame.style.display='none';
             document.body.appendChild(initFrame);
         }
@@ -762,7 +762,7 @@ async function loadWebsite(url) {
     const proxyType=getProxyType();
     if (proxyType === 'scramjet') {
         await initProxy();
-        src = `https://api.carbon06.qzz.io/embed.html`;
+        src = `https://api.classroom.lat/embed.html`;
         console.log('sj init, loading embed!');
     } else {
         await initProxy();
@@ -1214,7 +1214,7 @@ window.addEventListener('message', (event) => {
     if (event.data.type ==='app-load-url') {
         loadWebsite(event.data.url);
     }
-    if (event.origin==='https://api.carbon06.qzz.io' && event.data.type==='scramjet-ready') {
+    if (event.origin==='https://api.classroom.lat' && event.data.type==='scramjet-ready') {
         console.log('received scramjet-ready');
         document.querySelectorAll('.bframe').forEach(iframe => {
             if (iframe.src.includes('embed.html') && iframe.dataset.pendingUrl){
@@ -1222,13 +1222,13 @@ window.addEventListener('message', (event) => {
                 iframe.contentWindow.postMessage({
                     type:'navigate',
                     url: url,
-                },'https://api.carbon06.qzz.io');
+                },'https://api.classroom.lat');
                 console.log('sent nav AFTER READY',url);
                 delete iframe.dataset.pendingUrl;
             }
         });
     }
-    if (event.origin==='https://api.carbon06.qzz.io' && event.data.type==='open-new-tab') {
+    if (event.origin==='https://api.classroom.lat' && event.data.type==='open-new-tab') {
         const url=event.data.url;
         let decodedUrl = url;
         if (url.includes('/scramjet/')) {
@@ -1239,7 +1239,7 @@ window.addEventListener('message', (event) => {
         }
         newTabUrl(decodedUrl);
     }
-    if (event.origin==='https://api.carbon06.qzz.io' && event.data.type==='scramjet-url-update') {
+    if (event.origin==='https://api.classroom.lat' && event.data.type==='scramjet-url-update') {
         console.log('URL upd event',event.data.url);
         const sjUrl = event.data.url;
         const pageTitle=event.data.title;
@@ -1250,7 +1250,7 @@ window.addEventListener('message', (event) => {
                 decodedUrl = decodeURIComponent(m[1]).split('&zx=')[0].split('&no_sw_cr=')[0];
             }
         } catch (_) {}
-        if (decodedUrl.includes('api.carbon06.qzz.io/embed.html')) return;
+        if (decodedUrl.includes('api.classroom.lat/embed.html')) return;
         const activeTab = document.querySelector('.tab.active');
         if (activeTab) {
             const tabId=activeTab.dataset.tabId;
