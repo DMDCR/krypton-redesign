@@ -1331,7 +1331,7 @@ document.querySelectorAll('.shortcut').forEach(shortcut => {
         } else if (title === 'settings') {
             loadWebsiteInternal('./settings.html','Settings');
         } else if (title === 'movies') { 
-            loadWebsite('https://xprime.today/'); 
+            loadWebsite('https://pstream.mov/'); 
         }
     });
 });
