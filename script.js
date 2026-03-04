@@ -27,6 +27,7 @@ const urlDisplay = document.createElement('div');
 urlDisplay.className = 'url-display';
 urlContainer.insertBefore(urlDisplay,urlInput.nextSibling);
 let isNav = false;
+let isInt = false;
 
 let bookmarks = JSON.parse(localStorage.getItem('krypton_bookmarks') || '[]');
 let history = JSON.parse(localStorage.getItem('krypton_history') || '[]');
@@ -47,9 +48,16 @@ if ('serviceWorker' in navigator) {
     .catch(err => console.error('sw failed',err));
 }
 
+document.addEventListener('click',()=>{
+    hasInt = true;
+},{once:true});
+
 window.addEventListener('beforeunload',(e)=>{
-    e.preventDefault();
-    e.returnValue='';
+    const frame = document.getElementById('zoneFrame');
+    if (hasInt&&frame&&frame.style.display!=='none') {
+        e.preventDefault();
+        e.returnValue='';
+    }
 });
 
 async function initProxy() {
