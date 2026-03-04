@@ -33,7 +33,6 @@ const CORE_ASSETS = [
     '/sw.js',
     '/register-sw.mjs',
     '/game-sw.js',
-    '/cache-sw.js',
     'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap',
     'https://unpkg.com/lucide@latest',
     'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js'
