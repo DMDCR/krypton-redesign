@@ -1058,6 +1058,10 @@ document.getElementById('settingsItem').addEventListener('click',()=>{
     loadWebsiteInternal('./settings.html','Settings');
 });
 
+document.getElementById('discordItem').addEventListener('click',()=>{
+    window.location.href='https://discord.gg/ZM6mR678wQ';
+});
+
 // about overlay stuff
 document.getElementById('aboutItem').addEventListener('click', () => {
     drMenu.classList.remove('show');
