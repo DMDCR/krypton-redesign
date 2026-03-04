@@ -135,8 +135,7 @@ async function fetchCKVGames() {
     try {
         const iconMap = {};
         try {
-            const iconRes = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`${CKV_ICONS_URL}/games.json`)}`);
-            console.log(iconRes);
+            const iconRes = await fetch(`${CKV_ICONS_URL}/games.json?t=${Date.now()}`);
             const iconJson = await iconRes.json();
             iconJson.forEach(g => {
                 const key = g.name.toLowerCase().replace(/[^a-z0-9]/g, '');
