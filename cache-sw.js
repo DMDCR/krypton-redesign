@@ -1,4 +1,4 @@
-const CACHE_NAME = 'krypton-v2';
+const CACHE_NAME = 'krypton-v2.1';
 const CORE_ASSETS = [
     '/',
     '/index.html',
@@ -7,6 +7,9 @@ const CORE_ASSETS = [
     '/bookmarks.html',
     '/settings.html',
     '/script.js',
+    '/ai.html',
+    '/scripts/ai.js',
+    '/styles/ai.css',
     '/styles/styles.css',
     '/styles/settings.css',
     '/styles/history.css',
