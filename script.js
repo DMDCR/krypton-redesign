@@ -1,4 +1,4 @@
-import * as BareMux from "/baremux/index.mjs";
+import * as BareMux from "/sail/baremux/index.mjs";
 let connection=null;
 function getConnection() {
     if (!connection) {
@@ -12,6 +12,17 @@ let sjInit = false;
 let isLoading = false;
 
 lucide.createIcons();
+
+const { ScramjetController }=$scramjetLoadController();
+const scramjet=new ScramjetController({
+    files: {
+        all:"/sail/scram/scramjet.all.js",
+        wasm:"/sail/scram/scramjet.wasm.wasm",
+        sync:"/sail/scram/scramjet.sync.js"
+    },
+    prefix:"/sail/go"
+});
+scramjet.init();
 
 //MAKE SURE YOU CHANGE THESE. ANNOUNCEMENT VARS
 let anncId = 1;
@@ -79,8 +90,14 @@ async function initProxy() {
             console.log('epoxy set!');
         }
     } else if (pType==='scramjet') {
-        sjInit=true;
-        console.log('sj init');
+        if (!swReg) {
+            await navigator.serviceWorker.register('/sail/sw.js');
+            swReg=true;
+        }
+        const conn = getConnection();
+        if ((await conn.getTransport())!=='/sail/libcurl/index.mjs') {
+            await conn.setTransport('/sail/libcurl/index.mjs',[{websocket:localStorage.getItem('krypton_wispUrl')||'wss://wisp.rhw.one/'}]);
+        }
     }
 }
 
@@ -458,55 +475,41 @@ function showWscreen() {
 }
 
 function startURLM(iframe,tabId) {
-    const proxyType=getProxyType();
-    if (proxyType==='scramjet') {
-        if (urlUpdInterval) {
-            clearInterval(urlUpdInterval);
-        }
-        return;
-    }
-    const activeTab = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
-    let lastUrl = tabs[tabId]?.url;
-    let urlChangeCount = 0;
-    urlUpdInterval=setInterval(()=>{
+    if (urlUpdInterval) clearInterval(urlUpdInterval);
+    urlUpdInterval = setInterval(()=>{
         try {
-            let iframeSrc = iframe.contentWindow.location.href;
-            const proxyType=getProxyType();
-            let decodedUrl=null;
-            if (proxyType==='scramjet'&&iframeSrc.includes('/scram/')) {
-                let parts = iframeSrc.split('/scram/')
-                if (parts[1]) {
-                    decodedUrl=decodeURIComponent(parts[1]);
-                }
+            const iframeSrc = iframe.contentWindow.location.href;
+            const proxyType = getProxyType();
+            let decodedUrl = null;
+            if (proxyType==='scramjet'&&iframeSrc.includes('/sail/go')) {
+                decodedUrl = scramjet.decodeUrl(iframeSrc);
             } else if (proxyType==='uv'&&iframeSrc.includes(__uv$config.prefix)) {
-                let encodedUrl = iframeSrc.split(__uv$config.prefix)[1];
-                decodedUrl=__uv$config.decodeUrl(encodedUrl);
+                const encodedUrl = iframeSrc.split(__uv$config.prefix)[1];
+                decodedUrl=__uv$config.decodedUrl(encodedUrl);
             }
             if (decodedUrl) {
-                if (tabs[tabId] && tabs[tabId].url !== decodedUrl) {
+                if (tabs[tabId]&&tabs[tabId].url!==decodedUrl) {
                     updBmBtn();
-                    tabs[tabId].isFirst = false;
-                    if (lastUrl !== decodedUrl && !isNav) {
+                    tabs[tabId].isFirst=false;
+                    if (!isNav) {
                         tabs[tabId].cgf = false;
                         updNavBtns();
                     }
-                    updTabFavicon(iframe,tabId);
+                    updTabFavicon(iframe, tabId);
+                    ATHistory(decodedUrl, decodedUrl);
                 }
-                lastUrl = decodedUrl;
-                if (document.activeElement !== urlInput) {
-                    document.getElementById('urlInput').value = decodedUrl;
-                    if (document.getElementById('urlInput').style.display === 'none') {
+                tabs[tabId].url=decodedUrl;
+                if (document.activeElement!==urlInput) {
+                    document.getElementById('urlInput').value=decodedUrl;
+                    if (urlInput.style.display==='none') {
                         urlDisplay.innerHTML = formatUrl(decodedUrl);
                     }
                 }
                 updLIC(decodedUrl);
-                tabs[tabId].url = decodedUrl;
-                updTitle(iframe,tabId);
+                updTitle(iframe, tabId);
             }
         } catch (e) {
-            if (tabs[tabId] && tabs[tabId].url) {
-                updLIC(tabs[tabId].url);
-            }
+            if (tabs[tabId]?.url) updLIC(tabs[tabId].url);
         }
     },500);
 }
@@ -777,11 +780,8 @@ async function loadWebsite(url) {
     let src;
     const proxyType=getProxyType();
     if (proxyType === 'scramjet') {
-        await initProxy();
-        src = `https://api.classroom.lat/embed.html`;
-        console.log('sj init, loading embed!');
+        src=scramjet.encodeUrl(fixedurl);
     } else {
-        await initProxy();
         src=__uv$config.prefix+__uv$config.encodeUrl(fixedurl);
     }
     console.log('fullurl:',fixedurl);
