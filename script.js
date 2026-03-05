@@ -54,7 +54,7 @@ document.addEventListener('click',()=>{
 
 window.addEventListener('beforeunload',(e)=>{
     const frame = document.getElementById('zoneFrame');
-    if (hasInt&&frame&&frame.style.display!=='none') {
+    if (isInt&&frame&&frame.style.display!=='none') {
         e.preventDefault();
         e.returnValue='';
     }
