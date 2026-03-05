@@ -49,7 +49,7 @@ if ('serviceWorker' in navigator) {
 }
 
 document.addEventListener('click',()=>{
-    hasInt = true;
+    isInt = true;
 },{once:true});
 
 window.addEventListener('beforeunload',(e)=>{
