@@ -85,7 +85,7 @@ function loadProvider(provider) {
     localStorage.setItem('krypton_provider',provider);
     games = [];fGames=[];aGames=[];
     const badge  = document.getElementById('provBadge');
-    if (badge) badge.textContent = provider==='ckv'?'CKV':'gn-math';
+    if (badge) badge.textContent = provider==='ckv'?'CKV':provider==='hydra'?'Hydra':'gn-math';
     document.querySelectorAll('.prov-option').forEach(el => {
         el.classList.toggle('active',el.dataset.provider===provider);
     });
