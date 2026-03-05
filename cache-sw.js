@@ -1,4 +1,4 @@
-const CACHE_NAME = 'krypton-v2.5';
+const CACHE_NAME = 'krypton-v3';
 const CORE_ASSETS = [
     '/',
     '/index.html',
