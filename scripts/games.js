@@ -103,7 +103,7 @@ function initProvSel() {
     providerEl.innerHTML = `
     <div class="prov-btn" id="provBtn">
         <i data-lucide="layers"></i>
-        <span id="provBadge" class="prov-badge">${currProvider === 'ckv' ? 'CKV' : 'gn-math'}</span
+        <span id="provBadge" class="prov-badge">${currProvider === 'ckv' ? 'CKV' : currProvider==='hydra'?'Hydra'}</span
         <i data-lucide="chevron-down" class="prov-chevron"></i>
     </div>
     <div class="prov-dropdown" id="provDropdown">
