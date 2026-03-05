@@ -7,8 +7,9 @@ const COVER_URL = "https://cdn.jsdelivr.net/gh/gn-math/covers@main";
 const HTML_URL = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
 const CKV_URL = "https://cdn.jsdelivr.net/gh/WanoCapy/ChickenKingsVault@main";
 const CKV_ICONS_URL = "https://raw.githubusercontent.com/carbonicality/ChickenKingsVault/main";
+const HYDRA_URL = "https://cdn.jsdelivr.net/gh/Hydra-Network/hydra-assets@main";
 
-let currProvider = localStorage.getItem('krypton_provider') || 'ckv';
+let currProvider = localStorage.getItem('krypton_provider') || 'hydra';
 
 console.log('sw controlled:',!!navigator.serviceWorker.controller);
 if (navigator.serviceWorker.controller) {
@@ -89,6 +90,7 @@ function loadProvider(provider) {
         el.classList.toggle('active',el.dataset.provider===provider);
     });
     if (provider==='ckv') fetchCKVGames();
+    else if (provider==='hydra') fetchHydraGames();
     else fetchGames();
 }
 
@@ -105,6 +107,10 @@ function initProvSel() {
         <i data-lucide="chevron-down" class="prov-chevron"></i>
     </div>
     <div class="prov-dropdown" id="provDropdown">
+        <div class="prov-option ${currProvider === 'hydra'?'active':''}" data-provider="hydra">
+            <span class="prov-dot"></span>
+            Hydra
+        </div>
         <div class="prov-option ${currProvider === 'ckv'?'active':''}" data-provider="ckv">
             <span class="prov-dot"></span>
             CKV
@@ -168,6 +174,31 @@ async function fetchCKVGames() {
         const cachedGames = localStorage.getItem('krypton_games_list_ckv');
         if (cachedGames) {
             games = JSON.parse(cachedGames);
+            aGames = [...games];
+            fGames = [...games];
+            renderGames();
+        }
+    }
+}
+
+async function fetchHydraGames() {
+    try {
+        const res=await fetch(`${HYDRA_URL}/gmes.json?t=${Date.now()}`);
+        const json=await res.json();
+        games = json.map(g => ({
+            name: g.title,
+            icon: `${HYDRA_URL}/${g.thumb}`,
+            url: g.frame === 'true' ?`${HYDRA_URL}/${g.file_name}`:`${HYDRA_URL}/${g.file_name}`,
+        }));
+        localStorage.setItem('krypton_games_list_hydra',JSON.stringify(games));
+        aGames=[...games];
+        fGames=[...games];
+        renderGames();
+    } catch (error) {
+        console.error('failed to load hydra games:',error);
+        const cachedGames= localStorage.getItem('krypton_games_list_hydra');
+        if (cachedGames) {
+            games=JSON.parse(cachedGames);
             aGames = [...games];
             fGames = [...games];
             renderGames();
