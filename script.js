@@ -1385,7 +1385,7 @@ document.querySelectorAll('.shortcut').forEach(shortcut => {
         } else if (title === 'settings') {
             loadWebsiteInternal('./settings.html','Settings');
         } else if (title === 'movies') { 
-            loadWebsite('https://pstream.mov/'); 
+            loadWebsite('https://rivestream.org/'); 
         }
     });
 });
