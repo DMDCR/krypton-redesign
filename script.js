@@ -26,9 +26,9 @@ scramjet.init();
 
 //MAKE SURE YOU CHANGE THESE. ANNOUNCEMENT VARS
 //DEAR VET PLEASE QUOTE THE STRINGS
-let anncId = 2;
-let anncMsg = "I should have fixed movies, there might be 1 or 2 ads so make sure if u can to change the dns settings on ur chromebook to use some AdBlocking one or just download ublock -vet";
-let anncTitle = "fixed movies";
+let anncId = 3;
+let anncMsg = "i fixed the movies once again -vet (decayed shut up!!! axis sux!!!). IXL is personalized learning Comprehensive K–12 curriculums Math ● Language arts ● Science Social studies ● Spanish Trusted by educators and parents Immersive learning experience";
+let anncTitle = "fixed movies again";
 
 let tabCount = 1;
 let tabs = {};
