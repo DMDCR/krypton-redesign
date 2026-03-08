@@ -9,6 +9,9 @@
         <script src="https://unpkg.com/lucide@latest"></script>
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
+        <!-- adcash script -->
+        <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-PFE26JMWNJ"></script>
         <script>
@@ -90,6 +93,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="bookmarks-bar">
                 <span class="bm-label">Bookmarks</span>
                 <div class="bm-container" id="bmContainer"></div>
@@ -97,50 +101,70 @@
             <div class="progbar-cont" id="progBarCont">
                 <div class="progbar"id="progBar"></div>
             </div>
+            
             <div class="c-area">
                 <div id="particles-js"></div>
                 <div class="loading-ovr" id="loadOvr">
                     <span class="loader"></span>
                     <div class="load-txt">Loading...</div>
                 </div>
-                <div class="wscreen">
-                    <h1>krypton</h1>
-                    <p class="subtitle">browse without boundaries</p>
-                    <div class="search-box">
-                        <div class="search-in-wpr">
-                            <div class="search-icon">
-                                <i data-lucide="search"></i>
+                
+                <div class="wscreen-wpr">
+                    <!-- ad left -->
+                    <div class="ad-sidebar ad-left">
+                        <script type="text/javascript">
+                            aclib.runBanner({zoneId: '11049650'});
+                        </script>
+                    </div>
+
+                    <div class="wscreen">
+                        <h1>krypton</h1>
+                        <p class="subtitle">browse without boundaries</p>
+                        <div class="search-box">
+                            <div class="search-in-wpr">
+                                <div class="search-icon">
+                                    <i data-lucide="search"></i>
+                                </div>
+                                <input type="text" class="search-input" placeholder="search here...">
                             </div>
-                            <input type="text" class="search-input" placeholder="search here...">
+                        </div>
+                        <div class="shortcuts">
+                            <div class="shortcut">
+                                <div class="s-icon">
+                                    <i data-lucide="gamepad-2"></i>
+                                </div>
+                                <div class="s-title">games</div>
+                            </div>
+                            <div class="shortcut">
+                                <div class="s-icon">
+                                    <i data-lucide="layout-grid"></i>
+                                </div>
+                                <div class="s-title">apps</div>
+                            </div>
+                            <div class="shortcut">
+                                <div class="s-icon">
+                                    <i data-lucide="message-circle"></i>
+                                </div>
+                                <div class="s-title">ai</div>
+                            </div>
+                            <div class="shortcut">
+                                <div class="s-icon">
+                                    <i data-lucide="video"></i>
+                                </div>
+                                <div class="s-title">movies</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="shortcuts">
-                        <div class="shortcut">
-                            <div class="s-icon">
-                                <i data-lucide="gamepad-2"></i>
-                            </div>
-                            <div class="s-title">games</div>
-                        </div>
-                        <div class="shortcut">
-                            <div class="s-icon">
-                                <i data-lucide="layout-grid"></i>
-                            </div>
-                            <div class="s-title">apps</div>
-                        </div>
-                        <div class="shortcut">
-                            <div class="s-icon">
-                                <i data-lucide="message-circle"></i>
-                            </div>
-                            <div class="s-title">ai</div>
-                        </div>
-                        <div class="shortcut">
-                            <div class="s-icon">
-                                <i data-lucide="video"></i>
-                            </div>
-                            <div class="s-title">movies</div>
-                        </div>
+
+                    <!-- ad right -->
+                    <div class="ad-sidebar ad-right">
+                        <script type="text/javascript">
+                            aclib.runBanner({zoneId: '11049650'});
+                        </script>
                     </div>
+
                 </div>
+
             </div>
         </div>
         <div class="about-ovr" id="aboutOverlay">
