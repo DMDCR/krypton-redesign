@@ -224,7 +224,7 @@ async function fetchHydraGames() {
 
 async function checkGames() {
     try {
-        const cache = await caches.open('krypton-v4');
+        const cache = await caches.open('krypton-v5');
         const requests  =await cache.keys();
         const cachedUrls = requests.map(req => req.url);
         return cachedUrls;
