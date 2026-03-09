@@ -84,7 +84,7 @@ async function initProxy() {
                 throw err;
             }
         }
-        let wispUrl = localStorage.getItem('krypton_wispUrl') || "wss://wisp.mercurywork.shop";
+        let wispUrl = localStorage.getItem('krypton_wispUrl') || "wss://wisp.classroom.lat/";
         const conn = getConnection();
         if ((await connection.getTransport()!=="/epoxy/index.mjs")) {
             await connection.setTransport("/epoxy/index.mjs",[{wisp:wispUrl}]);
@@ -1386,7 +1386,7 @@ document.querySelectorAll('.shortcut').forEach(shortcut => {
         } else if (title === 'settings') {
             loadWebsiteInternal('./settings.html','Settings');
         } else if (title === 'movies') { 
-            loadWebsite('https://watch.spencerdevs.xyz/'); 
+            loadWebsite('https://cineby.gd/'); 
         }
     });
 });
