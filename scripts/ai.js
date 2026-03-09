@@ -3,9 +3,13 @@ lucide.createIcons();
 const messagesEl = document.getElementById('aiMsgs');
 const inputEl = document.getElementById('aiInput');
 const sendBtn = document.getElementById('aiSend');
+const modelBtn = document.getElementById('modelBtn');
+const modelDr = document.getElementById('modelDr');
 
 let convoHistory = [];
 let cApiKey = null;
+
+let currModel = 'google/gemini-3-flash-preview';
 
 function appendMsg(role,text) {
     const welcome = messagesEl.querySelector('.ai-welcome');
@@ -72,7 +76,7 @@ async function sendMsg() {
                 'Content-Type':'application/json',
             },
             body: JSON.stringify({
-                model:'google/gemini-3-flash-preview',
+                model:currModel,
                 messages: [
                     {role:'system',content:'you are krypton ai, an assistant for the krypton site.'},
                     ...convoHistory
@@ -94,6 +98,26 @@ async function sendMsg() {
     sendBtn.disabled=false;
     inputEl.focus();
 }
+
+modelBtn.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    modelDr.classList.toggle('open');
+    lucide.createIcons();
+});
+
+document.addEventListener('click',()=>{
+    modelDr.classList.remove('open');
+});
+
+document.querySelectorAll('.model-option').forEach(el =>{
+    el.addEventListener('click',()=>{
+        currModel = el.dataset.model;
+        document.getElementById('modelBadge').textContent=el.textContent.trim();
+        document.querySelectorAll('.model-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
+        modelDr.classList.remove('open');
+    });
+});
 
 function partCount() {
     const preset = localStorage.getItem('krypton_particlePreset') || 'maximum';

@@ -20,6 +20,21 @@
             </div>
             <div class="ai-input-area">
                 <div class="ai-input-wpr">
+                    <div class="model-sel" id="modelSel">
+                        <button class="model-btn" id="modelBtn">
+                            <i data-lucide="cpu"></i>
+                            <span id="modelBadge">Gemini 3 Flash Preview</span>
+                            <i data-lucide="chevron-up" class="model-chv"></i>
+                        </button>
+                        <div class="model-dr" id="modelDr">
+                            <div class="model-option active" data-model="google/gemini-3-flash-preview">
+                                <span class="prov-dot"></span>3 Flash Preview
+                            </div>
+                            <div class="model-option" data-model="google/gemini-2.5-flash">
+                                <span class="prov-dot"></span>2.5 Flash
+                            </div>
+                        </div>
+                    </div>
                     <textarea class="ai-input" id="aiInput" placeholder="ask anything..." rows="1"></textarea>
                     <button class="ai-send-btn" id="aiSend">
                         <i data-lucide="send"></i>
